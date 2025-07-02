@@ -4,6 +4,8 @@ import com.BrunoFujisaki.devbooks_backend.dto.CategoriaDTO;
 import com.BrunoFujisaki.devbooks_backend.infra.exception.CategoriaException;
 import com.BrunoFujisaki.devbooks_backend.model.Categoria;
 import com.BrunoFujisaki.devbooks_backend.repository.CategoriaRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,4 +23,9 @@ public class CategoriaService {
         return new CategoriaDTO(repository.save(new Categoria(dto.nome())));
     }
 
+    public Categoria getCategoriaByNome(String categoria) {
+        return repository.findByNome(categoria).orElseThrow(() -> {
+            throw new EntityNotFoundException("Categoria não encontrada.");
+        });
+    }
 }

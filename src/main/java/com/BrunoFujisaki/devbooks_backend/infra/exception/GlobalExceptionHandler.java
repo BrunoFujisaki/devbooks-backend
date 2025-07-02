@@ -1,5 +1,6 @@
 package com.BrunoFujisaki.devbooks_backend.infra.exception;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -20,6 +21,14 @@ public class GlobalExceptionHandler {
                 .body(errors.stream()
                         .map(ValidationDataErrors::new)
                         .toList());
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<RestErrorMessage> handleEntityNotFoundException(EntityNotFoundException ex) {
+        var msg = new RestErrorMessage(HttpStatus.NOT_FOUND, ex.getMessage());
+        return ResponseEntity
+                .status(msg.status)
+                .body(msg);
     }
 
     @ExceptionHandler(CategoriaException.class)
