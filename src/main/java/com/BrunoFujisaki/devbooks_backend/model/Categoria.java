@@ -17,4 +17,8 @@ public class Categoria {
     private Integer id;
     @NotBlank
     private String nome;
+
+    public Categoria(String nome) {
+        this.nome = nome;
+    }
 }
