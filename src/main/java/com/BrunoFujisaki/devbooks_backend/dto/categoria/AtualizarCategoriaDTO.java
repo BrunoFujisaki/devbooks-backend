@@ -1,4 +1,4 @@
-package com.BrunoFujisaki.devbooks_backend.dto;
+package com.BrunoFujisaki.devbooks_backend.dto.categoria;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +9,6 @@ public record AtualizarCategoriaDTO(
         @NotNull
         UUID id,
         @NotBlank
-        String nome,
-        Integer quantidade
+        String nome
 ) {
 }

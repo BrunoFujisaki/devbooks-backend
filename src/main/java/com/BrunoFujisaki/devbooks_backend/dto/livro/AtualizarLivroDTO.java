@@ -1,4 +1,4 @@
-package com.BrunoFujisaki.devbooks_backend.dto;
+package com.BrunoFujisaki.devbooks_backend.dto.livro;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,7 +8,9 @@ import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public record CriarLivroDTO(
+public record AtualizarLivroDTO(
+        @NotNull
+        UUID id,
         @NotBlank
         String titulo,
         @NotBlank
@@ -23,4 +25,5 @@ public record CriarLivroDTO(
         BigDecimal valor,
         @NotBlank
         String imagem
-) { }
+) {
+}

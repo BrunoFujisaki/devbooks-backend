@@ -1,8 +1,8 @@
 package com.BrunoFujisaki.devbooks_backend.controller;
 
-import com.BrunoFujisaki.devbooks_backend.dto.AtualizarCategoriaDTO;
-import com.BrunoFujisaki.devbooks_backend.dto.CriarCategoriaDTO;
-import com.BrunoFujisaki.devbooks_backend.dto.ListarCategoriaDTO;
+import com.BrunoFujisaki.devbooks_backend.dto.categoria.AtualizarCategoriaDTO;
+import com.BrunoFujisaki.devbooks_backend.dto.categoria.CriarCategoriaDTO;
+import com.BrunoFujisaki.devbooks_backend.dto.categoria.ListarCategoriaDTO;
 import com.BrunoFujisaki.devbooks_backend.service.CategoriaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -42,11 +42,11 @@ public class CategoriaController {
                 .body(new ListarCategoriaDTO(service.getCategoria(id)));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ListarCategoriaDTO> atualizarCategoria(@PathVariable UUID id, @RequestBody @Valid AtualizarCategoriaDTO dto) {
+    @PutMapping
+    public ResponseEntity<ListarCategoriaDTO> atualizarCategoria(@RequestBody @Valid AtualizarCategoriaDTO dto) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.atualizarCategoria(id, dto));
+                .body(service.atualizarCategoria(dto));
     }
 
     @DeleteMapping("/{id}")

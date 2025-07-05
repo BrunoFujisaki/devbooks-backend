@@ -1,4 +1,4 @@
-package com.BrunoFujisaki.devbooks_backend.dto;
+package com.BrunoFujisaki.devbooks_backend.dto.categoria;
 
 import com.BrunoFujisaki.devbooks_backend.model.Categoria;
 import jakarta.validation.constraints.NotBlank;

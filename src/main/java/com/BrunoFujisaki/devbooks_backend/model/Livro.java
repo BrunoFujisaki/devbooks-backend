@@ -1,6 +1,7 @@
 package com.BrunoFujisaki.devbooks_backend.model;
 
-import com.BrunoFujisaki.devbooks_backend.dto.CriarLivroDTO;
+import com.BrunoFujisaki.devbooks_backend.dto.livro.AtualizarLivroDTO;
+import com.BrunoFujisaki.devbooks_backend.dto.livro.CriarLivroDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -49,5 +50,29 @@ public class Livro {
         this.valor = dto.valor();
         this.imagem = dto.imagem();
         this.categoria = categoria;
+    }
+
+    public void atualizar(AtualizarLivroDTO dto, Categoria categoria) {
+        if (dto.titulo() != null && !dto.titulo().isBlank()) {
+            this.titulo = dto.titulo();
+        }
+        if (dto.autor() != null && !dto.autor().isBlank()) {
+            this.autor = dto.autor();
+        }
+        if (dto.descricao() != null && !dto.descricao().isBlank()) {
+            this.descricao = dto.descricao();
+        }
+        if (dto.descricao() != null && dto.estoque() != null) {
+            this.estoque = dto.estoque();
+        }
+        if (dto.valor() != null) {
+            this.valor = dto.valor();
+        }
+        if (dto.imagem() != null && !dto.imagem().isBlank()) {
+            this.imagem = dto.imagem();
+        }
+        if (categoria != null) {
+            this.categoria = categoria;
+        }
     }
 }

@@ -1,13 +1,16 @@
-package com.BrunoFujisaki.devbooks_backend.dto;
+package com.BrunoFujisaki.devbooks_backend.dto.livro;
 
+import com.BrunoFujisaki.devbooks_backend.dto.categoria.ListarCategoriaDTO;
 import com.BrunoFujisaki.devbooks_backend.model.Livro;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public record ListarLivroDTO(
+        UUID id,
         String titulo,
         String autor,
-        CriarCategoriaDTO categoria,
+        ListarCategoriaDTO categoria,
         String descricao,
         Integer estoque,
         BigDecimal valor,
@@ -15,9 +18,10 @@ public record ListarLivroDTO(
 ) {
     public ListarLivroDTO(Livro livro) {
         this(
+            livro.getId(),
             livro.getTitulo(),
             livro.getAutor(),
-            new CriarCategoriaDTO(livro.getCategoria()),
+            new ListarCategoriaDTO(livro.getCategoria()),
             livro.getDescricao(),
             livro.getEstoque(),
             livro.getValor(),

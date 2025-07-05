@@ -1,9 +1,8 @@
 package com.BrunoFujisaki.devbooks_backend.service;
 
-import com.BrunoFujisaki.devbooks_backend.dto.AtualizarCategoriaDTO;
-import com.BrunoFujisaki.devbooks_backend.dto.CriarCategoriaDTO;
-import com.BrunoFujisaki.devbooks_backend.dto.CriarLivroDTO;
-import com.BrunoFujisaki.devbooks_backend.dto.ListarCategoriaDTO;
+import com.BrunoFujisaki.devbooks_backend.dto.categoria.AtualizarCategoriaDTO;
+import com.BrunoFujisaki.devbooks_backend.dto.categoria.CriarCategoriaDTO;
+import com.BrunoFujisaki.devbooks_backend.dto.categoria.ListarCategoriaDTO;
 import com.BrunoFujisaki.devbooks_backend.infra.exception.CategoriaException;
 import com.BrunoFujisaki.devbooks_backend.model.Categoria;
 import com.BrunoFujisaki.devbooks_backend.repository.CategoriaRepository;
@@ -37,13 +36,11 @@ public class CategoriaService {
     }
 
     @Transactional
-    public ListarCategoriaDTO atualizarCategoria(UUID id, AtualizarCategoriaDTO dto) {
+    public ListarCategoriaDTO atualizarCategoria(AtualizarCategoriaDTO dto) {
         if (repository.existsByNome(dto.nome())) {
             throw new CategoriaException("Categoria já existe.");
         }
-        var categoria = repository.findById(id).orElseThrow(() ->
-            new EntityNotFoundException("Categoria não encontrada.")
-        );
+        var categoria = getCategoria(dto.id());
         categoria.atualizar(dto);
 
         return new ListarCategoriaDTO(categoria);
@@ -57,9 +54,7 @@ public class CategoriaService {
 
     @Transactional
     public void deletarCategoria(UUID id) {
-        var categoria = repository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException("Categoria não encontrada.");
-        });
+        var categoria = getCategoria(id);
 
         repository.delete(categoria);
     }

@@ -1,15 +1,11 @@
 package com.BrunoFujisaki.devbooks_backend.model;
 
-import com.BrunoFujisaki.devbooks_backend.dto.AtualizarCategoriaDTO;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.BrunoFujisaki.devbooks_backend.dto.categoria.AtualizarCategoriaDTO;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
@@ -26,12 +22,9 @@ public class Categoria {
     @NotBlank
     @Column(unique = true)
     private String nome;
-    @Setter
-    private Integer quantidadeLivros;
 
     public Categoria(String nome) {
         this.nome = nome;
-        this.quantidadeLivros = 0;
     }
 
     public void atualizar(AtualizarCategoriaDTO dto) {
