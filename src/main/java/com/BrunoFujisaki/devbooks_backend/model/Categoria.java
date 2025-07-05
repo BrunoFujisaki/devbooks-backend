@@ -1,12 +1,18 @@
 package com.BrunoFujisaki.devbooks_backend.model;
 
-import com.BrunoFujisaki.devbooks_backend.dto.CategoriaDTO;
-import jakarta.persistence.*;
-import jakarta.validation.Valid;
+import com.BrunoFujisaki.devbooks_backend.dto.AtualizarCategoriaDTO;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.UUID;
 
 @Entity
 @Table(name = "categorias")
@@ -15,11 +21,12 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(of = "id")
 public class Categoria {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @UuidGenerator
+    private UUID id;
     @NotBlank
     @Column(unique = true)
     private String nome;
+    @Setter
     private Integer quantidadeLivros;
 
     public Categoria(String nome) {
@@ -27,7 +34,7 @@ public class Categoria {
         this.quantidadeLivros = 0;
     }
 
-    public void atualizar(CategoriaDTO dto) {
+    public void atualizar(AtualizarCategoriaDTO dto) {
         if (!dto.nome().isBlank()) {
             this.nome = dto.nome();
         }

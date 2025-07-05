@@ -1,38 +1,26 @@
 package com.BrunoFujisaki.devbooks_backend.dto;
 
-import com.BrunoFujisaki.devbooks_backend.model.Livro;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
-public record LivroDTO(
+public record CriarLivroDTO(
         @NotBlank
         String titulo,
         @NotBlank
         String autor,
-        @NotBlank
-        String categoria,
+        @NotNull
+        UUID categoria,
         @NotBlank
         String descricao,
         @NotNull @PositiveOrZero
-        Integer quantidade,
+        Integer estoque,
         @NotNull @Positive
         BigDecimal valor,
         @NotBlank
         String imagem
-) {
-    public LivroDTO(Livro livro) {
-        this(
-            livro.getTitulo(),
-            livro.getAutor(),
-            livro.getCategoria().getNome(),
-            livro.getDescricao(),
-            livro.getQuantidade(),
-            livro.getValor(),
-            livro.getImagem()
-        );
-    }
-}
+) { }

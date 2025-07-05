@@ -1,6 +1,7 @@
 package com.BrunoFujisaki.devbooks_backend.controller;
 
-import com.BrunoFujisaki.devbooks_backend.dto.LivroDTO;
+import com.BrunoFujisaki.devbooks_backend.dto.CriarLivroDTO;
+import com.BrunoFujisaki.devbooks_backend.dto.ListarLivroDTO;
 import com.BrunoFujisaki.devbooks_backend.service.LivroService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +20,14 @@ public class LivroController {
     private final LivroService service;
 
     @PostMapping
-    public ResponseEntity<LivroDTO> criarLivro(@RequestBody @Valid LivroDTO dto) {
+    public ResponseEntity<ListarLivroDTO> criarLivro(@RequestBody @Valid CriarLivroDTO dto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(service.criarLivro(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<LivroDTO>> listarLivros() {
+    public ResponseEntity<List<ListarLivroDTO>> listarLivros() {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.getLivros());
