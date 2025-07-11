@@ -2,17 +2,21 @@ package com.BrunoFujisaki.devbooks_backend.service;
 
 import com.BrunoFujisaki.devbooks_backend.dto.usuarios.AutenticacaoDTO;
 import com.BrunoFujisaki.devbooks_backend.dto.usuarios.ListarUsuarioDTO;
+import com.BrunoFujisaki.devbooks_backend.dto.usuarios.UsuarioAtualizacaoDTO;
 import com.BrunoFujisaki.devbooks_backend.dto.usuarios.UsuarioCadastroDTO;
 import com.BrunoFujisaki.devbooks_backend.infra.security.TokenJwtDTO;
 import com.BrunoFujisaki.devbooks_backend.infra.security.TokenService;
 import com.BrunoFujisaki.devbooks_backend.model.Usuario;
 import com.BrunoFujisaki.devbooks_backend.repository.UsuarioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +37,19 @@ public class UsuarioService {
     public ListarUsuarioDTO cadastrarUsuario(UsuarioCadastroDTO dto) {
         var senha = new BCryptPasswordEncoder().encode(dto.senha());
         return new ListarUsuarioDTO(usuarioRepository.save(new Usuario(dto, senha)));
+    }
+
+    public Usuario getUsuario(UUID id) {
+        return usuarioRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Usuário não encontrado")
+        );
+    }
+
+    @Transactional
+    public ListarUsuarioDTO atualizarUsuario(UsuarioAtualizacaoDTO dto) {
+        var usuario = getUsuario(dto.id());
+        System.out.println("endereco: "+dto.enderecoDTO());
+        usuario.atualizar(dto);
+        return new ListarUsuarioDTO(usuario);
     }
 }

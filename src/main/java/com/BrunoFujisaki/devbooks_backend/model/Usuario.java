@@ -1,6 +1,7 @@
 package com.BrunoFujisaki.devbooks_backend.model;
 
 
+import com.BrunoFujisaki.devbooks_backend.dto.usuarios.UsuarioAtualizacaoDTO;
 import com.BrunoFujisaki.devbooks_backend.dto.usuarios.UsuarioCadastroDTO;
 import com.BrunoFujisaki.devbooks_backend.model.enums.UserRole;
 import jakarta.persistence.*;
@@ -26,16 +27,40 @@ public class Usuario implements UserDetails {
     @Id
     @UuidGenerator
     private UUID id;
+    private String nome;
     private String email;
+    private String telefone;
     @Setter
     private String senha;
     @Enumerated(EnumType.STRING)
     private UserRole role;
+    @Embedded
+    private Endereco endereco;
 
     public Usuario(UsuarioCadastroDTO dto, String senha) {
+        this.nome = dto.nome();
         this.email = dto.email();
+        this.telefone = dto.telefone();
         this.senha = senha;
-        this.role = dto.role();
+        this.role = UserRole.USER;
+        this.endereco = new Endereco("", "", "", "", "", "", "");
+    }
+
+    public void atualizar(UsuarioAtualizacaoDTO dto) {
+        if (dto.nome() != null && !dto.nome().isBlank()) {
+            this.nome = dto.nome();
+        }
+        if (dto.email() != null && !dto.email().isBlank()) {
+            this.email = dto.email();
+        }
+        if (dto.telefone() != null && !dto.telefone().isBlank()) {
+            this.telefone = dto.telefone();
+        }
+        if (this.endereco == null) {
+            this.endereco = new Endereco(dto.enderecoDTO());
+        } else {
+            this.endereco.atualizar(dto.enderecoDTO());
+        }
     }
 
     @Override

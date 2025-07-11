@@ -24,6 +24,10 @@ public class TokenService {
             return new TokenJwtDTO(JWT.create()
                     .withIssuer("API DevBooks")
                     .withSubject(usuario.getEmail())
+                    .withClaim("id", usuario.getId().toString())
+                    .withClaim("nome", usuario.getNome())
+                    .withClaim("telefone", usuario.getTelefone())
+                    .withClaim("role", usuario.getRole().toString())
                     .withExpiresAt(genExpirateDateTime())
                     .sign(algorithm));
         } catch (JWTCreationException exception){

@@ -16,7 +16,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("categorias")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
 public class CategoriaController {
 
     private final CategoriaService service;
