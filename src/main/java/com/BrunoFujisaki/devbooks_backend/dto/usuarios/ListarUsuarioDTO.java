@@ -1,6 +1,5 @@
 package com.BrunoFujisaki.devbooks_backend.dto.usuarios;
 
-import com.BrunoFujisaki.devbooks_backend.model.Endereco;
 import com.BrunoFujisaki.devbooks_backend.model.Usuario;
 import com.BrunoFujisaki.devbooks_backend.model.enums.UserRole;
 
@@ -13,7 +12,7 @@ public record ListarUsuarioDTO(
         String telefone,
         String senha,
         UserRole role,
-        EnderecoDTO enderecoDTO
+        EnderecoDTO endereco
 ) {
     public ListarUsuarioDTO(Usuario usuario) {
         this(

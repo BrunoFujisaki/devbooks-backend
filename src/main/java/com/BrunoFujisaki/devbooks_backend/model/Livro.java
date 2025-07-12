@@ -75,4 +75,8 @@ public class Livro {
             this.categoria = categoria;
         }
     }
+
+    public void atualizarQuantidade(Integer quantidade) {
+        this.estoque -= quantidade;
+    }
 }

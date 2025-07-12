@@ -7,6 +7,6 @@ public record UsuarioAtualizacaoDTO (
         String nome,
         String email,
         String telefone,
-        EnderecoDTO enderecoDTO
+        EnderecoDTO endereco
 ) {
 }

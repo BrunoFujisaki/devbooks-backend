@@ -48,7 +48,6 @@ public class UsuarioService {
     @Transactional
     public ListarUsuarioDTO atualizarUsuario(UsuarioAtualizacaoDTO dto) {
         var usuario = getUsuario(dto.id());
-        System.out.println("endereco: "+dto.enderecoDTO());
         usuario.atualizar(dto);
         return new ListarUsuarioDTO(usuario);
     }

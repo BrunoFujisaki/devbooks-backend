@@ -42,7 +42,7 @@ public class Usuario implements UserDetails {
         this.email = dto.email();
         this.telefone = dto.telefone();
         this.senha = senha;
-        this.role = UserRole.USER;
+        this.role = UserRole.ADMIN;
         this.endereco = new Endereco("", "", "", "", "", "", "");
     }
 
@@ -57,9 +57,9 @@ public class Usuario implements UserDetails {
             this.telefone = dto.telefone();
         }
         if (this.endereco == null) {
-            this.endereco = new Endereco(dto.enderecoDTO());
+            this.endereco = new Endereco(dto.endereco());
         } else {
-            this.endereco.atualizar(dto.enderecoDTO());
+            this.endereco.atualizar(dto.endereco());
         }
     }
 
