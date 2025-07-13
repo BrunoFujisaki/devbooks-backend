@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
-import org.springframework.context.annotation.Lazy;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

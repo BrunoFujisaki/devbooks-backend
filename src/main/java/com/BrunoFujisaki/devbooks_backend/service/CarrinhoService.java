@@ -1,17 +1,21 @@
 package com.BrunoFujisaki.devbooks_backend.service;
 
 import com.BrunoFujisaki.devbooks_backend.dto.carrinho.AdicionarAoCarrinhoDTO;
+import com.BrunoFujisaki.devbooks_backend.dto.carrinho.CarrinhoItemIdDTO;
 import com.BrunoFujisaki.devbooks_backend.dto.carrinho.ListarCarrinhoDTO;
 import com.BrunoFujisaki.devbooks_backend.dto.carrinho.ListarCarrinhoItemDTO;
+import com.BrunoFujisaki.devbooks_backend.infra.exception.LivroException;
 import com.BrunoFujisaki.devbooks_backend.model.Carrinho;
 import com.BrunoFujisaki.devbooks_backend.model.CarrinhoItem;
 import com.BrunoFujisaki.devbooks_backend.model.CarrinhoItemID;
+import com.BrunoFujisaki.devbooks_backend.model.Usuario;
 import com.BrunoFujisaki.devbooks_backend.repository.CarrinhoItemRepository;
 import com.BrunoFujisaki.devbooks_backend.repository.CarrinhoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,9 +32,14 @@ public class CarrinhoService {
     private final LivroService livroService;
 
     @Transactional
-    public ListarCarrinhoDTO adicionarItemAoCarrinho(@Valid AdicionarAoCarrinhoDTO dto) {
-        var usuario = usuarioService.getUsuario(dto.usuarioId());
+    public ListarCarrinhoDTO adicionarItemAoCarrinho(@Valid AdicionarAoCarrinhoDTO dto, Authentication authentication) {
+        var usuario = (Usuario) authentication.getPrincipal();
+        System.out.println(usuario.getNome());
         var livro = livroService.getLivro(dto.livroId());
+
+        if (livro.getEstoque() == 0)
+            throw new LivroException(livro.getTitulo()+" Sem estoque");
+
         var carrinho = carrinhoRepository.findByUsuarioId(usuario.getId())
                 .orElseGet(() -> {
                         var newCarrinho = new Carrinho();
@@ -57,14 +66,14 @@ public class CarrinhoService {
             carrinho.getItens().add(item);
         }
         carrinho.calcularValorTotal();
-        livro.atualizarQuantidade(dto.quantidade());
+        livro.atualizarQuantidade(dto.quantidade(), false);
 
         List<ListarCarrinhoItemDTO> listarCarrinhoItemDTO = new ArrayList<>();
         carrinho.getItens().forEach(i -> {
             listarCarrinhoItemDTO.add(new ListarCarrinhoItemDTO(i));
         });
 
-        return new ListarCarrinhoDTO(usuario.getId(), carrinho.getValorTotal(), listarCarrinhoItemDTO);
+        return new ListarCarrinhoDTO(carrinho.getId(), usuario.getId(), carrinho.getValorTotal(), listarCarrinhoItemDTO);
     }
 
     public ListarCarrinhoDTO getItens(UUID usuarioId) {
@@ -73,10 +82,37 @@ public class CarrinhoService {
                 new EntityNotFoundException("Carrinho não encontrado ou vazio")
         );
         List<ListarCarrinhoItemDTO> listarCarrinhoItemDTO = new ArrayList<>();
-        carrinho.getItens().forEach(i -> {
-            listarCarrinhoItemDTO.add(new ListarCarrinhoItemDTO(i));
-        });
+        carrinho.getItens().forEach(i ->
+            listarCarrinhoItemDTO.add(new ListarCarrinhoItemDTO(i))
+        );
 
-        return new ListarCarrinhoDTO(usuario.getId(), carrinho.getValorTotal(), listarCarrinhoItemDTO);
+        return new ListarCarrinhoDTO(carrinho.getId(), usuario.getId(), carrinho.getValorTotal(), listarCarrinhoItemDTO);
     }
+
+    @Transactional
+    public void retirarQuantidadeDoItem(CarrinhoItemIdDTO dto) {
+        var item = carrinhoItemRepository.findById(new CarrinhoItemID(dto.livroId(), dto.carrinhoId())).orElseThrow(() ->
+                new EntityNotFoundException("Item não encontrado")
+        );
+
+        if (item.getQuantidade() == 1)
+            throw new IllegalStateException("A quantidade mínima do item no carrinho é 1. Para remover, use DELETE.");
+
+        item.setQuantidade(item.getQuantidade() - 1);
+        item.getLivro().atualizarQuantidade(1, true);
+        item.getCarrinho().calcularValorTotal();
+    }
+
+    @Transactional
+    public void removerItemDoCarrinho(CarrinhoItemIdDTO dto) {
+        var item = carrinhoItemRepository.findById(new CarrinhoItemID(dto.livroId(), dto.carrinhoId())).orElseThrow(() ->
+                new EntityNotFoundException("Item não encontrado")
+        );
+        item.getLivro().atualizarQuantidade(item.getQuantidade(), true);
+        System.out.println(item.getQuantidade());
+        var carrinho = item.getCarrinho();
+        carrinho.getItens().remove(item);
+        carrinho.calcularValorTotal();
+    }
+
 }

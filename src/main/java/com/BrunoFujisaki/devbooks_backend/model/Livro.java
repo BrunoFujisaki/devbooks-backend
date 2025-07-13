@@ -76,7 +76,11 @@ public class Livro {
         }
     }
 
-    public void atualizarQuantidade(Integer quantidade) {
-        this.estoque -= quantidade;
+    public void atualizarQuantidade(Integer quantidade, Boolean adicionar) {
+        if (adicionar) {
+            this.estoque += quantidade;
+        } else {
+            this.estoque -= quantidade;
+        }
     }
 }
