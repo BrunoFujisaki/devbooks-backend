@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -29,5 +30,12 @@ public class UsuarioController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(usuarioService.atualizarUsuario(dto));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ListarUsuarioDTO>> listarUsuarios() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(usuarioService.getUsuarios());
     }
 }

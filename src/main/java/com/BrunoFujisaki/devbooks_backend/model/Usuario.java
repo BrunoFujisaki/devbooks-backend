@@ -34,16 +34,13 @@ public class Usuario implements UserDetails {
     private String senha;
     @Enumerated(EnumType.STRING)
     private UserRole role;
-    @Embedded
-    private Endereco endereco;
 
     public Usuario(UsuarioCadastroDTO dto, String senha) {
         this.nome = dto.nome();
         this.email = dto.email();
         this.telefone = dto.telefone();
         this.senha = senha;
-        this.role = UserRole.ADMIN;
-        this.endereco = new Endereco("", "", "", "", "", "", "");
+        this.role = UserRole.USER;
     }
 
     public void atualizar(UsuarioAtualizacaoDTO dto) {
@@ -55,11 +52,6 @@ public class Usuario implements UserDetails {
         }
         if (dto.telefone() != null && !dto.telefone().isBlank()) {
             this.telefone = dto.telefone();
-        }
-        if (this.endereco == null) {
-            this.endereco = new Endereco(dto.endereco());
-        } else {
-            this.endereco.atualizar(dto.endereco());
         }
     }
 

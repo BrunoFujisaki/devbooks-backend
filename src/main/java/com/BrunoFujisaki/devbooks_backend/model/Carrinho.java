@@ -1,6 +1,7 @@
 package com.BrunoFujisaki.devbooks_backend.model;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "carrinhos")
 @Getter
+@EqualsAndHashCode(of = "id")
 public class Carrinho {
     @Id
     @UuidGenerator
@@ -35,5 +37,10 @@ public class Carrinho {
                     .add(item.getValor()
                             .multiply(BigDecimal.valueOf(item.getQuantidade())));
         });
+    }
+
+    public void limparCarrinho() {
+        this.getItens().clear();
+        this.valorTotal = BigDecimal.ZERO;
     }
 }

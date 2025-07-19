@@ -33,7 +33,10 @@ public class GlobalExceptionHandler {
                 .body(msg);
     }
 
-    @ExceptionHandler(CategoriaException.class)
+    @ExceptionHandler({
+            CategoriaException.class,
+            CarrinhoException.class
+    })
     public ResponseEntity<RestErrorMessage> handleUnprocessableException(RuntimeException ex) {
         var msg = new RestErrorMessage(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
         return ResponseEntity

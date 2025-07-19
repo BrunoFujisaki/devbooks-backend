@@ -22,17 +22,23 @@ public class CarrinhoController {
 
     @PostMapping
     public ResponseEntity<ListarCarrinhoDTO> adicionarItemAoCarrinho(@RequestBody @Valid AdicionarAoCarrinhoDTO dto, Authentication authentication) {
-        System.out.println("Adicionando");
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(carrinhoService.adicionarItemAoCarrinho(dto, authentication));
     }
 
-    @GetMapping("/{usuarioId}")
-    public ResponseEntity<ListarCarrinhoDTO> listarItens(@PathVariable UUID usuarioId) {
+    @GetMapping("/{id}")
+    public ResponseEntity<ListarCarrinhoDTO> getCarrinhoPeloID(@PathVariable UUID id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(carrinhoService.getItens(usuarioId));
+                .body(carrinhoService.getCarrinho(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<ListarCarrinhoDTO> listarItens(Authentication authentication) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(carrinhoService.getItens(authentication));
     }
 
     @PatchMapping

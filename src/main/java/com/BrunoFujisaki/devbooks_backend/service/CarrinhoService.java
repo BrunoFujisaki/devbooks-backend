@@ -28,15 +28,12 @@ public class CarrinhoService {
 
     private final CarrinhoRepository carrinhoRepository;
     private final CarrinhoItemRepository carrinhoItemRepository;
-    private final UsuarioService usuarioService;
     private final LivroService livroService;
 
     @Transactional
     public ListarCarrinhoDTO adicionarItemAoCarrinho(@Valid AdicionarAoCarrinhoDTO dto, Authentication authentication) {
         var usuario = (Usuario) authentication.getPrincipal();
-        System.out.println(usuario.getNome());
         var livro = livroService.getLivro(dto.livroId());
-
         if (livro.getEstoque() == 0)
             throw new LivroException(livro.getTitulo()+" Sem estoque");
 
@@ -76,9 +73,9 @@ public class CarrinhoService {
         return new ListarCarrinhoDTO(carrinho.getId(), usuario.getId(), carrinho.getValorTotal(), listarCarrinhoItemDTO);
     }
 
-    public ListarCarrinhoDTO getItens(UUID usuarioId) {
-        var usuario = usuarioService.getUsuario(usuarioId);
-        var carrinho = carrinhoRepository.findByUsuarioId(usuarioId).orElseThrow(() ->
+    public ListarCarrinhoDTO getItens(Authentication authentication) {
+        var usuario = (Usuario) authentication.getPrincipal();
+        var carrinho = carrinhoRepository.findByUsuarioId(usuario.getId()).orElseThrow(() ->
                 new EntityNotFoundException("Carrinho não encontrado ou vazio")
         );
         List<ListarCarrinhoItemDTO> listarCarrinhoItemDTO = new ArrayList<>();
@@ -115,4 +112,19 @@ public class CarrinhoService {
         carrinho.calcularValorTotal();
     }
 
+    public ListarCarrinhoDTO getCarrinho(UUID id) {
+        var carrinho = carrinhoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Carrinho não encontrado"));
+        List<ListarCarrinhoItemDTO> listarCarrinhoItemDTO = new ArrayList<>();
+        carrinho.getItens().forEach(i ->
+                listarCarrinhoItemDTO.add(new ListarCarrinhoItemDTO(i))
+        );
+
+        return new ListarCarrinhoDTO(
+                carrinho.getId(),
+                carrinho.getUsuario().getId(),
+                carrinho.getValorTotal(),
+                listarCarrinhoItemDTO
+        );
+    }
 }

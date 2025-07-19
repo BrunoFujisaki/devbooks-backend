@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -50,5 +51,13 @@ public class UsuarioService {
         var usuario = getUsuario(dto.id());
         usuario.atualizar(dto);
         return new ListarUsuarioDTO(usuario);
+    }
+
+    public List<ListarUsuarioDTO> getUsuarios() {
+        return usuarioRepository
+                .findAll()
+                .stream()
+                .map(ListarUsuarioDTO::new)
+                .toList();
     }
 }

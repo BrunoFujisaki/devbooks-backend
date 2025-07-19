@@ -11,8 +11,7 @@ public record ListarUsuarioDTO(
         String email,
         String telefone,
         String senha,
-        UserRole role,
-        EnderecoDTO endereco
+        UserRole role
 ) {
     public ListarUsuarioDTO(Usuario usuario) {
         this(
@@ -21,8 +20,7 @@ public record ListarUsuarioDTO(
             usuario.getEmail(),
             usuario.getTelefone(),
             usuario.getSenha(),
-            usuario.getRole(),
-            new EnderecoDTO(usuario.getEndereco())
+            usuario.getRole()
         );
     }
 }
