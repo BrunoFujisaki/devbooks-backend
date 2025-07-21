@@ -4,6 +4,8 @@ import com.BrunoFujisaki.devbooks_backend.dto.usuarios.AutenticacaoDTO;
 import com.BrunoFujisaki.devbooks_backend.dto.usuarios.ListarUsuarioDTO;
 import com.BrunoFujisaki.devbooks_backend.dto.usuarios.UsuarioAtualizacaoDTO;
 import com.BrunoFujisaki.devbooks_backend.dto.usuarios.UsuarioCadastroDTO;
+import com.BrunoFujisaki.devbooks_backend.infra.exception.LivroException;
+import com.BrunoFujisaki.devbooks_backend.infra.exception.UsuarioException;
 import com.BrunoFujisaki.devbooks_backend.infra.security.TokenJwtDTO;
 import com.BrunoFujisaki.devbooks_backend.infra.security.TokenService;
 import com.BrunoFujisaki.devbooks_backend.model.Usuario;
@@ -28,14 +30,20 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
 
     public TokenJwtDTO logarUsuario(AutenticacaoDTO dto) {
-        var authenticationToken = new UsernamePasswordAuthenticationToken(dto.email(), dto.senha());
-        var authentication = manager.authenticate(authenticationToken);
-
-        return tokenService.gerarToken((Usuario) authentication.getPrincipal());
+        try {
+            var authenticationToken = new UsernamePasswordAuthenticationToken(dto.email(), dto.senha());
+            var authentication = manager.authenticate(authenticationToken);
+            return tokenService.gerarToken((Usuario) authentication.getPrincipal());
+        } catch (RuntimeException ex) {
+            throw new UsuarioException("Dados inválidos");
+        }
     }
 
     @Transactional
     public ListarUsuarioDTO cadastrarUsuario(UsuarioCadastroDTO dto) {
+        if (usuarioRepository.existsByEmail(dto.email())) {
+            throw new UsuarioException("Email já registrado");
+        }
         var senha = new BCryptPasswordEncoder().encode(dto.senha());
         return new ListarUsuarioDTO(usuarioRepository.save(new Usuario(dto, senha)));
     }

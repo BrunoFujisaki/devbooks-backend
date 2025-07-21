@@ -4,6 +4,7 @@ import com.BrunoFujisaki.devbooks_backend.dto.carrinho.AdicionarAoCarrinhoDTO;
 import com.BrunoFujisaki.devbooks_backend.dto.carrinho.CarrinhoItemIdDTO;
 import com.BrunoFujisaki.devbooks_backend.dto.carrinho.ListarCarrinhoDTO;
 import com.BrunoFujisaki.devbooks_backend.dto.carrinho.ListarCarrinhoItemDTO;
+import com.BrunoFujisaki.devbooks_backend.infra.exception.CarrinhoException;
 import com.BrunoFujisaki.devbooks_backend.infra.exception.LivroException;
 import com.BrunoFujisaki.devbooks_backend.model.Carrinho;
 import com.BrunoFujisaki.devbooks_backend.model.CarrinhoItem;
@@ -93,7 +94,7 @@ public class CarrinhoService {
         );
 
         if (item.getQuantidade() == 1)
-            throw new IllegalStateException("A quantidade mínima do item no carrinho é 1. Para remover, use DELETE.");
+            throw new CarrinhoException("A quantidade mínima do item no carrinho é 1. Para remover, use DELETE.");
 
         item.setQuantidade(item.getQuantidade() - 1);
         item.getLivro().atualizarQuantidade(1, true);

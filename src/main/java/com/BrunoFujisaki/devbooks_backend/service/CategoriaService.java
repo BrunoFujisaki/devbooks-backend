@@ -6,6 +6,7 @@ import com.BrunoFujisaki.devbooks_backend.dto.categoria.ListarCategoriaDTO;
 import com.BrunoFujisaki.devbooks_backend.infra.exception.CategoriaException;
 import com.BrunoFujisaki.devbooks_backend.model.Categoria;
 import com.BrunoFujisaki.devbooks_backend.repository.CategoriaRepository;
+import com.BrunoFujisaki.devbooks_backend.repository.LivroRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class CategoriaService {
 
     private final CategoriaRepository repository;
+    private final LivroRepository livroRepository;
 
     @Transactional
     public ListarCategoriaDTO criarCategoria(CriarCategoriaDTO dto) {
@@ -55,7 +57,8 @@ public class CategoriaService {
     @Transactional
     public void deletarCategoria(UUID id) {
         var categoria = getCategoria(id);
-
+        if (livroRepository.existsByCategoria(categoria))
+            throw new CategoriaException("Esta categoria não pode ser excluída enquanto houver livros vinculados a ela.");
         repository.delete(categoria);
     }
 }

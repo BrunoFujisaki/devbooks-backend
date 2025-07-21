@@ -28,6 +28,7 @@ public class Usuario implements UserDetails {
     @UuidGenerator
     private UUID id;
     private String nome;
+    @Column(unique = true)
     private String email;
     private String telefone;
     @Setter

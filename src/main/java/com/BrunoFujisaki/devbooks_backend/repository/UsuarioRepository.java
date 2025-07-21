@@ -12,4 +12,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
 
     @Query("SELECT COUNT(u.id) FROM Usuario u")
     Long totalDeUsuarios();
+
+    Boolean existsByEmail(String email);
 }

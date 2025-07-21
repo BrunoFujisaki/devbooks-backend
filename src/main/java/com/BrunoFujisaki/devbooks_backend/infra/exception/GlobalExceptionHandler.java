@@ -1,14 +1,13 @@
 package com.BrunoFujisaki.devbooks_backend.infra.exception;
 
+import com.BrunoFujisaki.devbooks_backend.model.Livro;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
@@ -35,7 +34,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             CategoriaException.class,
-            CarrinhoException.class
+            CarrinhoException.class,
+            UsuarioException.class,
+            LivroException.class
     })
     public ResponseEntity<RestErrorMessage> handleUnprocessableException(RuntimeException ex) {
         var msg = new RestErrorMessage(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
